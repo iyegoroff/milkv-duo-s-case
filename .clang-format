@@ -1,0 +1,3 @@
+ColumnLimit: 88
+ContinuationIndentWidth: 2
+BreakBeforeTernaryOperators: false
