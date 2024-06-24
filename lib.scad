@@ -2,13 +2,6 @@ $fn = $preview ? 32 : 64;
 
 tiny = 0.01;
 
-__foo = function() 0;
-ar2 = function(fn) function(p1, p2 = __foo) p2 == __foo ? (function(p2) fn(p1, p2)) :
-                                                          fn(p1, p2);
-
-eq = ar2(function(x, y) x == y);
-neq = ar2(function(x, y) x != y);
-
 function reduce(list, first, op) = let(iter = function(acc, idx) len(list) == idx ?
                                                 acc :
                                                 iter(op(acc, list[idx]), idx + 1))
@@ -18,8 +11,6 @@ function every(list, op) = let(iter = function(idx) len(list) == idx ?
                                         true :
                                         (op(list[idx]) ? iter(idx + 1) : false))
   iter(0);
-
-function map(list, op) = reduce(list, [], function(acc, val) concat(acc, [op(val)]));
 
 module rotate_around(point, angle) {
   translate(point) rotate(angle) translate(-point) children();
@@ -62,7 +53,7 @@ module smooth_cube(size, fillet, chamfer) {
 }
 
 module offset_cube(size, offset) {
-  if (every(size, neq(0)))
+  if (every(size, function(x) x != 0))
     translate(-[ offset, offset, offset ])
       smooth_cube(size + [ offset, offset, offset ] * 2, fillet = offset);
 }
