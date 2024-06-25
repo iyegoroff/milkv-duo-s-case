@@ -2,16 +2,6 @@ $fn = $preview ? 32 : 64;
 
 tiny = 0.01;
 
-function reduce(list, first, op) = let(iter = function(acc, idx) len(list) == idx ?
-                                                acc :
-                                                iter(op(acc, list[idx]), idx + 1))
-  iter(first, 0);
-
-function every(list, op) = let(iter = function(idx) len(list) == idx ?
-                                        true :
-                                        (op(list[idx]) ? iter(idx + 1) : false))
-  iter(0);
-
 module rotate_around(point, angle) {
   translate(point) rotate(angle) translate(-point) children();
 }
@@ -53,7 +43,7 @@ module smooth_cube(size, fillet, chamfer) {
 }
 
 module offset_cube(size, offset) {
-  if (every(size, function(x) x != 0))
+  if (size.x != 0 && size.y != 0 && size.z != 0)
     translate(-[ offset, offset, offset ])
       smooth_cube(size + [ offset, offset, offset ] * 2, fillet = offset);
 }
@@ -91,10 +81,10 @@ module grid(points, step = [ 0, 0 ], shell = 0, rounding = 0, angle = 0,
             round_grid_border = false) {
   assert(len(points) >= 3);
 
-  min_x = reduce(points, points[0].x, function(prev, point) min(prev, point.x));
-  min_y = reduce(points, points[0].y, function(prev, point) min(prev, point.y));
-  max_x = reduce(points, points[0].x, function(prev, point) max(prev, point.x));
-  max_y = reduce(points, points[0].y, function(prev, point) max(prev, point.y));
+  min_x = min([for (p = points) p.x]);
+  min_y = min([for (p = points) p.y]);
+  max_x = max([for (p = points) p.x]);
+  max_y = max([for (p = points) p.y]);
   center = [ min_x + max_x, min_y + max_y ] / 2;
   radius = sqrt(pow(center.x - min_x, 2) + pow(center.y - min_y, 2));
   start = angle == 0 ? [ min_x, min_y ] : (center - [ radius, radius ]);

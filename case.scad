@@ -131,7 +131,7 @@ module board_plate(offset = [ 0, 0, 0 ]) {
       offset(board_rounding) offset(-board_rounding)
         square([ board_size.x + offset.x * 2, board_size.y + offset.y * 2 ]);
 
-    if (every(offset, function(o) o == 0))
+    if (offset.x == 0 && offset.y == 0 && offset.z == 0)
       for (i = [0:len(screw_slot_pos) - 1])
         translate(screw_slot_pos[i] - [ 0, 0, tiny ])
           cylinder(h = screw_slot_height + tiny * 2, r = screw_slot_radius);
